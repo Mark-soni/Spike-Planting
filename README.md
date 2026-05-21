@@ -1,60 +1,60 @@
 # Spike Planting 💣
 
-A Valorant overlay that shows a 45-second countdown with the Spike animation when you hold the `4` key — works globally even while in-game.
+Overlay para Valorant que muestra una animación de la Spike con un contador regresivo de 45 segundos al mantener la tecla `4`. Funciona en segundo plano aunque el juego esté en foco.
 
-## Features
+## Características
 
-- Hold `4` for 2 seconds to trigger the countdown
-- Spike animation synced to the 45-second timer
-- Always-on-top overlay — works over Valorant, Chrome, anything
-- Remembers position between sessions (drag to move)
-- Does **not** steal focus or minimize your game
+- Mantén `4` por 2 segundos para activar el contador
+- Animación de la Spike sincronizada con los 45 segundos
+- Overlay siempre encima — funciona sobre Valorant, Chrome, cualquier app
+- Recuerda la posición entre sesiones (arrástralo donde quieras)
+- **No roba el foco ni minimiza el juego**
 
-## Controls
+## Controles
 
-| Key | Action |
-|-----|--------|
-| Hold `4` (2s) | Start countdown |
-| `Ctrl+Q` | Hide overlay |
-| `Ctrl+Shift+Q` | Exit app |
+| Tecla | Acción |
+|-------|--------|
+| Mantener `4` (2s) | Iniciar contador |
+| `Ctrl+Q` | Ocultar overlay |
+| `Ctrl+Shift+Q` | Cerrar app |
 
-## Requirements
+## Requisitos
 
 - Python 3.x
-- Your own `Spike.webm` video file (place path in `countdown.py`)
+- Tu propio archivo de video `Spike.webm` (pon la ruta en `countdown.py`)
 
 ```
 pip install keyboard opencv-python Pillow
 ```
 
-## Usage
+## Uso
 
-Run as **Administrator** (required for global keyboard hook):
+Ejecuta como **Administrador** (requerido para el hook global de teclado):
 
 ```
 iniciar.bat
 ```
 
-Or manually:
+O manualmente:
 
 ```
 python countdown.py
 ```
 
-> **Note:** Valorant must be in **Borderless Windowed** mode for the overlay to appear on top.
+> **Nota:** Valorant debe estar en modo **Borderless Windowed** para que el overlay aparezca encima.
 
-## Configuration
+## Configuración
 
-Edit the top of `countdown.py` to customize:
+Edita las primeras líneas de `countdown.py` para personalizar:
 
 ```python
-TOTAL_SECONDS  = 45    # countdown duration
-HOLD_SECONDS   = 2     # seconds to hold '4' before triggering
-TRIGGER_KEY    = '4'   # key to hold
-SPIKE_OFFSET_X = 290   # horizontal position of spike in video
-HALF_CROP      = 380   # zoom level (higher = more zoomed out)
+TOTAL_SECONDS  = 45    # duración del contador
+HOLD_SECONDS   = 2     # segundos que hay que mantener '4' para activar
+TRIGGER_KEY    = '4'   # tecla a mantener
+SPIKE_OFFSET_X = 290   # posición horizontal de la Spike en el video
+HALF_CROP      = 380   # nivel de zoom (mayor = más alejado)
 ```
 
-## License
+## Licencia
 
-MIT — free to use, modify and share.
+MIT — libre para usar, modificar y compartir.
