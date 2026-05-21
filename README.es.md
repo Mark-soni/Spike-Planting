@@ -2,15 +2,15 @@
 
 > 🌐 [English Version](README.md)
 
-Overlay para Valorant que muestra una animación de la Spike con un contador regresivo de 45 segundos al mantener la tecla `4`. Funciona en segundo plano aunque el juego esté en foco.
+Overlay con contador regresivo global para Valorant. Mantén `4` por 2 segundos para iniciar una cuenta regresiva de 45 segundos — funciona aunque el juego esté en foco.
 
 ## Características
 
 - Mantén `4` por 2 segundos para activar el contador
-- Animación de la Spike sincronizada con los 45 segundos
 - Overlay siempre encima — funciona sobre Valorant, Chrome, cualquier app
 - Recuerda la posición entre sesiones (arrástralo donde quieras)
 - **No roba el foco ni minimiza el juego**
+- Opcional: agrega tu propio video encima del contador
 
 ## Controles
 
@@ -23,11 +23,15 @@ Overlay para Valorant que muestra una animación de la Spike con un contador reg
 ## Requisitos
 
 - Python 3.x
-- Tu propio archivo de video `Spike.webm` (pon la ruta en `countdown.py`)
 
 ```
-pip install keyboard opencv-python Pillow
+pip install keyboard
 ```
+
+> Opcional (solo si quieres un video encima del contador):
+> ```
+> pip install opencv-python Pillow
+> ```
 
 ## Uso
 
@@ -53,8 +57,9 @@ Edita las primeras líneas de `countdown.py` para personalizar:
 TOTAL_SECONDS  = 45    # duración del contador
 HOLD_SECONDS   = 2     # segundos que hay que mantener '4' para activar
 TRIGGER_KEY    = '4'   # tecla a mantener
-SPIKE_OFFSET_X = 290   # posición horizontal de la Spike en el video
-HALF_CROP      = 380   # nivel de zoom (mayor = más alejado)
+
+# Video opcional encima del contador (dejar vacío para desactivar)
+VIDEO_PATH     = r''   # ej: r'C:\Videos\spike.webm'
 ```
 
 ## Licencia

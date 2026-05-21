@@ -14,8 +14,9 @@ except ImportError:
 try:
     import cv2
     from PIL import Image, ImageTk
+    CV2_AVAILABLE = True
 except ImportError:
-    print("pip install opencv-python Pillow"); input(); sys.exit(1)
+    CV2_AVAILABLE = False
 
 
 TOTAL_SECONDS = 45
@@ -23,13 +24,13 @@ HOLD_SECONDS  = 2
 TRIGGER_KEY   = '4'
 POLL_INTERVAL = 0.05
 
-VIDEO_PATH  = r'C:\Users\marce\Downloads\Spike (2).webm'
+VIDEO_PATH  = r''  # ruta a tu video .webm — dejar vacío para solo mostrar el contador
 SPIKE_W     = 150   # tamaño display (cuadrado)
 SPIKE_H     = 150
 HALF_CROP   = 380   # mitad del recuadro que se recorta alrededor del centro de la spike
 SPIKE_OFFSET_X = 290  # negativo = izquierda, positivo = derecha
 WIN_W       = 200
-WIN_H       = SPIKE_H + 110
+WIN_H       = SPIKE_H + 110  # se recalcula en _build_window segun si hay video
 
 BG       = '#000000'  # negro puro = transparente
 PANEL_BG = '#111122'  # casi negro pero NO transparente
@@ -50,14 +51,16 @@ class CountdownOverlay:
         self.seconds    = TOTAL_SECONDS
         self._running   = True
         self._photo     = None
-        self._cap       = cv2.VideoCapture(VIDEO_PATH)
-        _total_frames   = self._cap.get(cv2.CAP_PROP_FRAME_COUNT)
-        # FPS ajustado para que el video dure exactamente TOTAL_SECONDS
-        self._fps       = _total_frames / TOTAL_SECONDS
+        self._has_video = CV2_AVAILABLE and bool(VIDEO_PATH)
+        if self._has_video:
+            self._cap   = cv2.VideoCapture(VIDEO_PATH)
+            _frames     = self._cap.get(cv2.CAP_PROP_FRAME_COUNT)
+            self._fps   = _frames / TOTAL_SECONDS  # sincronizado con el contador
 
         self._build_window()
         self._build_ui()
-        self._start_video()
+        if self._has_video:
+            self._start_video()
         self._start_key_monitor()
         self._register_quit_keys()
 
@@ -78,7 +81,8 @@ class CountdownOverlay:
             x = (sw - WIN_W) // 2
             y = sh // 4
 
-        self.root.geometry(f'{WIN_W}x{WIN_H}+{x}+{y}')
+        win_h = (SPIKE_H + 110) if self._has_video else 110
+        self.root.geometry(f'{WIN_W}x{win_h}+{x}+{y}')
         self.root.bind('<ButtonPress-1>', lambda e: setattr(self, '_dx', e.x) or setattr(self, '_dy', e.y))
         self.root.bind('<B1-Motion>',     self._drag)
 
@@ -98,15 +102,13 @@ class CountdownOverlay:
 
     # ------------------------------------------------------------------
     def _build_ui(self):
-        # Spike centrada arriba
-        spike_frame = tk.Frame(self.root, bg=BG)
-        spike_frame.pack(fill='x')
-
-        self.lbl_video = tk.Label(spike_frame, bg='#000000', bd=0)
-        self.lbl_video.pack(pady=(6, 0))
-
-        # Separador
-        tk.Frame(self.root, bg='#2a2a4a', height=1).pack(fill='x', padx=10)
+        # Video (solo si hay video configurado)
+        if self._has_video:
+            spike_frame = tk.Frame(self.root, bg=BG)
+            spike_frame.pack(fill='x')
+            self.lbl_video = tk.Label(spike_frame, bg='#000000', bd=0)
+            self.lbl_video.pack(pady=(6, 0))
+            tk.Frame(self.root, bg='#2a2a4a', height=1).pack(fill='x', padx=10)
 
         # Panel contador
         panel = tk.Frame(self.root, bg=PANEL_BG, padx=10, pady=6)
@@ -211,7 +213,8 @@ class CountdownOverlay:
 
     def _quit(self):
         self._running = False
-        self._cap.release()
+        if self._has_video:
+            self._cap.release()
         keyboard.unhook_all()
         self.root.destroy()
 
@@ -220,7 +223,8 @@ class CountdownOverlay:
             self.root.mainloop()
         finally:
             self._running = False
-            self._cap.release()
+            if self._has_video:
+                self._cap.release()
             keyboard.unhook_all()
 
 
