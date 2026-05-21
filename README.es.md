@@ -65,3 +65,7 @@ VIDEO_PATH     = r''   # ej: r'C:\Videos\spike.webm'
 ## Licencia
 
 MIT — libre para usar, modificar y compartir.
+
+---
+
+Built with the help of [Claude](https://claude.ai) (Anthropic)
